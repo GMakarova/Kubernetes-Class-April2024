@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-web
+  labels:
+    app: devops-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-web
+  template:
+    metadata:
+      labels:
+        app: devops-web
+    spec:
+      containers:
+      - name: devops-web
+        image: kaizenacademy/web-app:1.0.0
+        ports:
+        - containerPort: 3000
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: devops-web-config
+              key: PORT
+        - name: API_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: devops-web-config
+              key: API_HOST
+        - name: DBPORT
+          valueFrom:
+            configMapKeyRef:
+              name: devops-web-config
+              key: DBPORT
+        - name: DBUSER
+          valueFrom:
+            configMapKeyRef:
+              name: devops-web-config
+              key: DBUSER
+        - name: DBHOST
+          valueFrom:
+            configMapKeyRef:
+              name: devops-web-config
+              key: DBHOST
+        - name: DBPASS
+          valueFrom:
+            secrectKeyRef:
+              name: devops-web-secret
+              key: DBPASS
