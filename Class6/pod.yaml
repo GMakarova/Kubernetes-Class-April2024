@@ -11,3 +11,8 @@ spec:
     image: nginx:1.14.2  
   nodeSelector:
     team: kaizen
+  tolerations:
+  - key: "team"
+    operator: "Equal"
+    value: "dev"
+    effect: "NoSchedule"
