@@ -30,23 +30,15 @@ spec:
             configMapKeyRef:
               name: devops-web-config
               key: API_HOST
-        - name: DBPORT
-          valueFrom:
-            configMapKeyRef:
-              name: devops-web-config
-              key: DBPORT
-        - name: DBUSER
-          valueFrom:
-            configMapKeyRef:
-              name: devops-web-config
-              key: DBUSER
-        - name: DBHOST
-          valueFrom:
-            configMapKeyRef:
-              name: devops-web-config
-              key: DBHOST
-        - name: DBPASS
-          valueFrom:
-            secrectKeyRef:
-              name: devops-web-secret
-              key: DBPASS
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 10

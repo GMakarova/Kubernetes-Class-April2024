@@ -1,8 +1,64 @@
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
+apiVersion: aaps/v1
+kind: Deployment
 metadata:
-  name: test-network-policy
+  name: devops-api
+  labels:
+    app: devops-api
 spec:
-  podSelector: {}
-  policyTypes:
-    - Ingress
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-api
+  template:
+    metadata:
+      labels:
+        app: devops-api
+    spec:
+      containers:
+      - name:devops-api
+      image:kaizenacademy/api-app:1.0.0
+      ports:
+      - containerPort: 3001
+      env:
+      - name: PORT
+        valueFrom:
+          configMapKeyRef:
+            name: devops-api-config
+            key: PORT
+      - name: DB
+        valueFrom:
+          configMapKeyRef:
+            name: devops-api-config
+            key: DB
+      - name: DBPORT
+        valueFrom:
+          configMapKeyRef:
+            name: devops-api-config
+            Key: DBPORT
+      - name: DBUSER
+        valueFrom:
+          configMapKeyRef:
+            name: devops-api-config
+            key: DBUSER
+      - name: DBUSER
+        valueFrom:
+          configMapKeyRef:
+            name: devops-api-config
+            key: DBHOST
+      - name: DBPASS
+        valueFrom:
+          secretKeyRef:
+            name: devops-api-secret
+            key: DBPASS
+      readinessProbe:
+        httpGet:
+          path: /health
+          port: 3001
+        initialDelaySeconds: 10
+        periodSeconds: 10
+      livenessProbe:
+        httpGet:
+          path: /health
+          port: 3001
+        initialDelaySeconds: 10
+        periodSeconds: 10
